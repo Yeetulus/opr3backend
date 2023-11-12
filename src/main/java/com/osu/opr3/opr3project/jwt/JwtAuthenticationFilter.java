@@ -2,6 +2,8 @@ package com.osu.opr3.opr3project.jwt;
 
 import com.osu.opr3.opr3project.jwt.JwtService;
 import com.osu.opr3.opr3project.jwt.TokenRepository;
+import com.osu.opr3.opr3project.user.UserRepository;
+import com.osu.opr3.opr3project.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -32,6 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         if (request.getServletPath().contains("/api/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        final String authHeader = request.getHeader("Authorization");
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,8 +59,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                request.setAttribute("jwtUser", userRepository.findByEmail(userEmail).orElseThrow());
+                filterChain.doFilter(request, response);
             }
         }
-        filterChain.doFilter(request, response);
     }
 }

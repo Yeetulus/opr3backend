@@ -23,7 +23,7 @@ public class RegistrationRequest {
     private String email;
 
     @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!,.])((?![ .,]).)*(?=\\S+$).{8,}$",
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{5,}$",
             message = "Invalid password"
     )
     @NotBlank

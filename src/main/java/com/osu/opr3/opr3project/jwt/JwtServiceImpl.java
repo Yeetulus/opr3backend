@@ -26,7 +26,6 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService{
 
     private final TokenRepository tokenRepository;
-    private final UserService userService;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -137,21 +136,4 @@ public class JwtServiceImpl implements JwtService{
         return authHeader.substring(7);
     }
 
-    @Override
-    public User getUserFromToken(String token) throws IOException {
-        String userEmail = extractUsername(token);
-        if (userEmail != null) {
-            return userService.getByEmail(userEmail);
-        }
-        else {
-            final String errorMessage = "Cannot extract user from token";
-            throw new IOException(errorMessage);
-        }
-    }
-
-    @Override
-    public User getUserFromRequest(HttpServletRequest request) throws IOException {
-        String token = getTokenFromRequest(request);
-        return getUserFromToken(token);
-    }
 }

@@ -11,4 +11,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleItemNotFoundException(ItemNotFoundException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ItemNotOwnedException.class)
+    public ResponseEntity<String> handleItemNotOwnedException(ItemNotOwnedException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
 }

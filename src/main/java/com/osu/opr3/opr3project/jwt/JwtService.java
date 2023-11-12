@@ -23,7 +23,5 @@ public interface JwtService {
     void saveUserToken(User user, String jwtToken);
     void revokeAllUserTokens(User user);
     String getTokenFromRequest(HttpServletRequest request) throws IOException;
-    User getUserFromToken(String token) throws IOException;
-    User getUserFromRequest(HttpServletRequest request) throws IOException;
 
 }

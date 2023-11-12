@@ -1,7 +1,9 @@
 package com.osu.opr3.opr3project.task;
 
 import com.osu.opr3.opr3project.category.CategoryService;
-import com.osu.opr3.opr3project.user.User;
+import com.osu.opr3.opr3project.user.UserUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,8 +17,8 @@ public class TaskController {
 
     private final CategoryService categoryService;
     private final TaskService taskService;
-    @PreAuthorize("@categoryService.hasUserCategory(#taskRequest.categoryId, #jwtUser)")
-    public ResponseEntity<Task> createTask(@ModelAttribute("jwtUser") User user, @RequestParam TaskRequest taskRequest) {
+    @PreAuthorize("@categoryService.hasUserCategory(#id, @UserUtil.castToUser(#request.getAttribute('jwtUser')))")
+    public ResponseEntity<Task> createTask(@NonNull HttpServletRequest request, @RequestParam TaskRequest taskRequest) {
         return ResponseEntity.ok(taskService.createTask(taskRequest));
     }
 
