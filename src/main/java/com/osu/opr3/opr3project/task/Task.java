@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@SubtasksFormat
 public class Task {
 
     @Id
@@ -37,7 +38,7 @@ public class Task {
 
     private boolean completed;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentTask")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "parentTask")
     private List<Task> subtasks;
 
     @JsonIgnore
@@ -52,7 +53,7 @@ public class Task {
 
     public static class TaskBuilder {
 
-        private List<Task> subtasks = new ArrayList<>();
+        private final List<Task> subtasks = new ArrayList<>();
         public TaskBuilder fromDateAndToDate(LocalDateTime fromDate, LocalDateTime toDate) {
             if (fromDate != null && toDate != null) {
                 this.taskType = TaskType.COMPLEX;

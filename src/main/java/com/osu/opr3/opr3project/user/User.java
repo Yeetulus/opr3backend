@@ -34,7 +34,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Category> categories;
 
     @Override

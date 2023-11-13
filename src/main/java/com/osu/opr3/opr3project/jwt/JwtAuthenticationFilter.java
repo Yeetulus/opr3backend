@@ -1,9 +1,6 @@
 package com.osu.opr3.opr3project.jwt;
 
-import com.osu.opr3.opr3project.jwt.JwtService;
-import com.osu.opr3.opr3project.jwt.TokenRepository;
 import com.osu.opr3.opr3project.user.UserRepository;
-import com.osu.opr3.opr3project.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

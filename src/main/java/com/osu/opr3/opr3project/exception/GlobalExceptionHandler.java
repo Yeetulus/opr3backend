@@ -1,5 +1,6 @@
 package com.osu.opr3.opr3project.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,4 +17,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleItemNotOwnedException(ItemNotOwnedException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
+
 }

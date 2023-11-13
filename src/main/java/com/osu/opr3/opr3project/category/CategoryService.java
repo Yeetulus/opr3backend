@@ -12,6 +12,7 @@ public interface CategoryService {
     Category editCategory(Long id, CategoryRequest request) throws ItemNotFoundException;
     Category getCategory(Long id) throws ItemNotFoundException;
     boolean deleteCategory(Long categoryId) throws ItemNotFoundException;
-    boolean hasUserCategory(User user, Long categoryId) throws ItemNotOwnedException, ItemNotFoundException;
+    void hasUserCategory(User user, Long categoryId) throws ItemNotOwnedException, ItemNotFoundException;
+    void hasUserCategoryAndTask(User user, Long categoryId, Long taskId) throws ItemNotOwnedException, ItemNotFoundException;
     List<Category> getAllUserCategories(User user);
 }

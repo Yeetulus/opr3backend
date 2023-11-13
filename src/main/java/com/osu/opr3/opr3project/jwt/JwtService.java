@@ -4,7 +4,6 @@ import com.osu.opr3.opr3project.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Map;

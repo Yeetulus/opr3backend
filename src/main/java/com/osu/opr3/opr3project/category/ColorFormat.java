@@ -13,10 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = ColorFormatValidator.class)
 public @interface ColorFormat {
     String message() default "Invalid color format";
-
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
-
     boolean checkLightness() default false;
 }

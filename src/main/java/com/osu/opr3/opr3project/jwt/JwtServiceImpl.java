@@ -1,7 +1,6 @@
 package com.osu.opr3.opr3project.jwt;
 
 import com.osu.opr3.opr3project.user.User;
-import com.osu.opr3.opr3project.user.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
