@@ -3,6 +3,7 @@ package com.osu.opr3.opr3project.task;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.osu.opr3.opr3project.category.Category;
+import com.osu.opr3.opr3project.validation.SubtasksFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -10,6 +11,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -53,26 +55,17 @@ public class Task {
 
     public static class TaskBuilder {
 
-        private final List<Task> subtasks = new ArrayList<>();
-        public TaskBuilder fromDateAndToDate(LocalDateTime fromDate, LocalDateTime toDate) {
-            if (fromDate != null && toDate != null) {
-                this.taskType = TaskType.COMPLEX;
-            }
-            return this;
-        }
         public TaskBuilder subtasks(List<TaskRequest> subtaskRequests) {
             if (subtaskRequests != null && !subtaskRequests.isEmpty()) {
                 this.taskType = TaskType.COMPLEX;
-                List<Task> subtasks = new ArrayList<>();
-                for (TaskRequest subtaskRequest : subtaskRequests) {
-                    Task subtask = Task.builder()
-                            .name(subtaskRequest.getName())
-                            .description(subtaskRequest.getDescription())
-                            .category(this.category)
-                            .build();
-                    subtasks.add(subtask);
-                }
-                this.subtasks.addAll(subtasks);
+                this.subtasks = subtaskRequests.stream()
+                    .map(subtaskRequest -> Task.builder()
+                        .name(subtaskRequest.getName())
+                        .description(subtaskRequest.getDescription())
+                        .category(category)
+                        .taskType(TaskType.SIMPLE)
+                        .build())
+                    .collect(Collectors.toList());
             } else {
                 this.taskType = TaskType.SIMPLE;
             }
@@ -80,4 +73,5 @@ public class Task {
         }
 
     }
+
 }

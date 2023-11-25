@@ -4,7 +4,6 @@ import com.osu.opr3.opr3project.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +17,6 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
-@Order(1)
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
@@ -35,9 +33,10 @@ public class SecurityConfig{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL).permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -50,4 +49,6 @@ public class SecurityConfig{
         ;
         return http.build();
     }
+
+
 }

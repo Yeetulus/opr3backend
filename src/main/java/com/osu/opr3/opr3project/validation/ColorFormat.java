@@ -1,4 +1,4 @@
-package com.osu.opr3.opr3project.category;
+package com.osu.opr3.opr3project.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

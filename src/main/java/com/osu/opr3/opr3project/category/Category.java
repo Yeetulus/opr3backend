@@ -3,6 +3,7 @@ package com.osu.opr3.opr3project.category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.osu.opr3.opr3project.task.Task;
 import com.osu.opr3.opr3project.user.User;
+import com.osu.opr3.opr3project.validation.ColorFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -27,7 +28,7 @@ public class Category {
     @ColorFormat
     private String color;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"category"})
     private List<Task> tasks;
 

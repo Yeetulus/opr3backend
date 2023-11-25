@@ -1,4 +1,4 @@
-package com.osu.opr3.opr3project.task;
+package com.osu.opr3.opr3project.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -11,8 +11,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface SubtasksFormat {
     String message() default "Either subtasks or parentTask must be not null, but not both";
-
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
 }
