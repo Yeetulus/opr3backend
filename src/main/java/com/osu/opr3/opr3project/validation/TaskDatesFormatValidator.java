@@ -22,6 +22,10 @@ public class TaskDatesFormatValidator implements ConstraintValidator<TaskDatesFo
         LocalDateTime fromDate = taskRequest.getFromDate();
         LocalDateTime toDate = taskRequest.getToDate();
 
+        if (fromDate != null && toDate == null) {
+            fromDate = fromDate.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        }
+
         boolean valid = fromDate == null && toDate == null ||
                 fromDate != null && toDate == null ||
 
