@@ -7,9 +7,8 @@ import com.osu.opr3.opr3project.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +26,22 @@ public class TaskServiceImpl implements TaskService{
                 .category(category)
                 .fromDate(request.getFromDate())
                 .toDate(request.getToDate())
-                .subtasks(request.getSubtasks()).build();
-        if(newTask.getSubtasks() != null) newTask.getSubtasks().forEach(subtask -> subtask.setParentTask(newTask));
+                .build();
 
+        newTask = taskRepository.save(newTask);
+
+        List<Task> subtasks = new ArrayList<>();
+        if (request.getSubtasks() != null && !request.getSubtasks().isEmpty()) {
+            for (int i = 0; i < request.getSubtasks().size(); i++) {
+                subtasks.add(Task.builder()
+                        .name(request.getSubtasks().get(i).getName())
+                        .description(request.getSubtasks().get(i).getDescription())
+                        .parentTask(newTask)
+                        .build());
+            }
+            subtasks = taskRepository.saveAll(subtasks);
+        }
+        newTask.setSubtasks(subtasks);
         return taskRepository.save(newTask);
     }
 
@@ -38,28 +50,40 @@ public class TaskServiceImpl implements TaskService{
         var existingTask = taskRepository.findById(request.getId()).orElseThrow(
                 () -> new ItemNotFoundException(request.getId()));
 
+        var newCategory = request.getNewCategoryId()!= null? categoryService.getCategory(request.getNewCategoryId()):
+                categoryService.getCategory(request.getCategoryId());
+
         existingTask.setName(request.getName());
         existingTask.setDescription(request.getDescription());
-        existingTask.setCompleted(request.isCompleted());
         existingTask.setFromDate(request.getFromDate());
         existingTask.setToDate(request.getToDate());
+        existingTask.setCategory(newCategory);
 
-        if(request.getSubtasks() != null && !request.getSubtasks().isEmpty()){
-            request.getSubtasks().forEach(subtaskRequest ->{
-                Optional<Task> optionalSubtask = existingTask.getSubtasks().stream()
-                        .filter(subtask -> Objects.equals(subtask.getId(), subtaskRequest.getId()))
-                        .findFirst();
+        Boolean alterSubtasks = request.getAlterSubtasks();
+        if(alterSubtasks != null && alterSubtasks){
+            existingTask.getSubtasks().forEach(subtask -> subtask.setParentTask(null));
+            taskRepository.deleteAll(existingTask.getSubtasks());
+            existingTask.setSubtasks(new ArrayList<>());
 
-                if(optionalSubtask.isPresent()){
-                    var subtask = optionalSubtask.get();
-
-                    subtask.setName(subtaskRequest.getName());
-                    subtask.setDescription(subtaskRequest.getDescription());
-                    subtask.setCompleted(subtaskRequest.isCompleted());
-                    subtask.setFromDate(subtaskRequest.getFromDate());
-                    subtask.setToDate(subtaskRequest.getToDate());
-                }
-            });
+            if(request.getSubtasks()!=null) {
+                request.getSubtasks().forEach(s -> {
+                    var newSubtask = Task.builder()
+                            .name(s.getName())
+                            .description(s.getDescription())
+                            .parentTask(existingTask)
+                            .category(newCategory)
+                            .completed(s.isCompleted())
+                            .build();
+                    taskRepository.save(newSubtask);
+                    existingTask.getSubtasks().add(newSubtask);
+                });
+            }
+        }
+        else{
+            existingTask.setCompleted(request.isCompleted());
+            for (int i = 0; i < existingTask.getSubtasks().size(); i++) {
+                existingTask.getSubtasks().get(i).setCompleted(request.getSubtasks().get(i).isCompleted());
+            }
         }
 
         return taskRepository.save(existingTask);

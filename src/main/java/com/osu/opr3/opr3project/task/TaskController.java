@@ -1,6 +1,5 @@
 package com.osu.opr3.opr3project.task;
 
-import com.osu.opr3.opr3project.category.CategoryService;
 import com.osu.opr3.opr3project.security.SecurityService;
 import com.osu.opr3.opr3project.user.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/tasks")
 public class TaskController {
 
-    private final CategoryService categoryService;
     private final TaskService taskService;
     private final SecurityService securityService;
 
@@ -34,7 +32,9 @@ public class TaskController {
     @PutMapping("/edit")
     public ResponseEntity<Task> editTask(@NonNull HttpServletRequest request,
                                          @Valid @RequestBody TaskRequest taskRequest) {
-        securityService.hasUserTasks((User)request.getAttribute("jwtUser"), taskRequest);
+        var user = (User)request.getAttribute("jwtUser");
+        securityService.hasUserCategoryAndTask(user, taskRequest.getCategoryId(), taskRequest.getId());
+        if(taskRequest.getNewCategoryId() != null) securityService.hasUserCategory(user, taskRequest.getNewCategoryId());
         return ResponseEntity.ok(taskService.updateTask(taskRequest));
     }
 

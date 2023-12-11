@@ -9,9 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -35,12 +33,9 @@ public class Task {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime toDate;
 
-    @Enumerated(EnumType.STRING)
-    private TaskType taskType;
-
     private boolean completed;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "parentTask")
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "parentTask")
     private List<Task> subtasks;
 
     @JsonIgnore
@@ -53,25 +48,5 @@ public class Task {
     @JsonIgnore
     private Category category;
 
-    public static class TaskBuilder {
-
-        public TaskBuilder subtasks(List<TaskRequest> subtaskRequests) {
-            if (subtaskRequests != null && !subtaskRequests.isEmpty()) {
-                this.taskType = TaskType.COMPLEX;
-                this.subtasks = subtaskRequests.stream()
-                    .map(subtaskRequest -> Task.builder()
-                        .name(subtaskRequest.getName())
-                        .description(subtaskRequest.getDescription())
-                        .category(category)
-                        .taskType(TaskType.SIMPLE)
-                        .build())
-                    .collect(Collectors.toList());
-            } else {
-                this.taskType = TaskType.SIMPLE;
-            }
-            return this;
-        }
-
-    }
 
 }

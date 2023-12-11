@@ -28,7 +28,7 @@ public class Category {
     @ColorFormat
     private String color;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({"category"})
     private List<Task> tasks;
 

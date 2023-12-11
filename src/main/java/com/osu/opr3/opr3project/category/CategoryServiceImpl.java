@@ -1,15 +1,12 @@
 package com.osu.opr3.opr3project.category;
 
 import com.osu.opr3.opr3project.exception.ItemNotFoundException;
-import com.osu.opr3.opr3project.exception.ItemNotOwnedException;
 import com.osu.opr3.opr3project.user.User;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .name(request.getName())
                 .description(request.getDescription())
                 .color(request.getColor())
+                .tasks(new ArrayList<>())
                 .user(user)
                 .build();
         return categoryRepository.save(newCategory);

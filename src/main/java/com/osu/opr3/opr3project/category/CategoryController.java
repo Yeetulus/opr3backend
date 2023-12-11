@@ -3,7 +3,6 @@ package com.osu.opr3.opr3project.category;
 import com.osu.opr3.opr3project.security.SecurityService;
 import com.osu.opr3.opr3project.user.User;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,6 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete")
-    //@PreAuthorize("categoryService.hasUserCategory(#id, @UserUtil.castToUser(#request.getAttribute('jwtUser')))")
     public ResponseEntity<Boolean> deleteUserCategory(@NonNull HttpServletRequest request,
                                                      @RequestParam Long id){
         securityService.hasUserCategory((User)request.getAttribute("jwtUser"), id);

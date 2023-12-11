@@ -3,7 +3,6 @@ package com.osu.opr3.opr3project.security;
 import com.osu.opr3.opr3project.category.CategoryService;
 import com.osu.opr3.opr3project.exception.ItemNotFoundException;
 import com.osu.opr3.opr3project.exception.ItemNotOwnedException;
-import com.osu.opr3.opr3project.task.TaskRequest;
 import com.osu.opr3.opr3project.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,18 +36,4 @@ public class SecurityServiceImpl implements SecurityService{
         throw new ItemNotOwnedException(user.getEmail(), category.getId());
     }
 
-    @Override
-    public void hasUserTasks(User user, TaskRequest request) throws ItemNotOwnedException, ItemNotFoundException {
-        hasUserCategoryAndTask(
-                user,
-                request.getCategoryId(),
-                request.getId());
-
-        if(request.getSubtasks() != null){
-            request.getSubtasks().forEach(r -> hasUserCategoryAndTask(
-                        user,
-                        r.getCategoryId(),
-                        r.getId()));
-        }
-    }
 }
